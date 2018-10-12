@@ -1,10 +1,10 @@
 <template>
-    <nav>
-       <ul class="navList">
-           <li class="shopNav">SHOP</li>
-           <li class="achiNav">ACHIEVEMENTS</li>
-        </ul>
-    </nav>
+  <nav>
+    <ul class="navList">
+      <li class="shopNav">SHOP</li>
+      <li class="achiNav">EXTRA</li>
+    </ul>
+  </nav>
 </template>
 <script>
 export default {
@@ -64,10 +64,14 @@ nav {
   margin-right: 1.5em;
   font-weight: 800;
   cursor: pointer;
+  padding: 1em;
 }
 
-.activeNav{
-  text-decoration: underline;
+.navList > li:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
 
+.activeNav {
+  text-decoration: underline;
 }
 </style>
