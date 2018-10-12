@@ -246,7 +246,7 @@ export default {
       }
 
       if (this.$cookies.isKey('items')) {
-        // this.items = JSON.parse(this.$cookies.get('items'))
+        this.items = JSON.parse(this.$cookies.get('items'))
       }
 
       if (this.$cookies.isKey('pps')) {
