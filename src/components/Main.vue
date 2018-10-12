@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div>
+    <div class="clicker-area" v-on:click="clicked">
       <div class="points" :v-bind="points">
         <h1>{{numberWithCommas(points)}}</h1>
       </div>
@@ -26,7 +26,7 @@
         </ul>
         <div class="shopBuffsBox">
           <div v-if="items[3].level >= 1" class="buff" v-bind:class="{inUse: doublePPSactive}" title="Double your Points per second for 30sec, 5min cooldown" v-on:click="doublePPS()">x2</div>
-          <div class="buff evolveBuff" v-if="items[7].level >= 1" v-on:click="evolve()" title="Click to evolve">!+!</div>
+          <div class="buff evolveBuff" v-if="items[9].level >= 1" v-on:click="evolve()" title="Click to evolve">!+!</div>
         </div>
       </div>
 
@@ -92,7 +92,23 @@
           </li>
           <li>
             <div>Good luck:</div>
-            <div v-if="totalPoints < 100000000000000" :v-bind="totalPoints">{{numberWithCommas(totalPoints)}}/100,000,000,000,000</div>
+            <div v-if="totalPoints < 100000000000000" :v-bind="totalPoints" title="HINT: ITS 100,000,000,000,000">{{numberWithCommas(totalPoints)}}/?</div>
+            <div class="completedAchi" v-else>Completed</div>
+          </li>
+          <br>
+          <li>
+            <div>Evolved:</div>
+            <div v-if="evolveLvl < 1" :v-bind="evolveLvl">{{numberWithCommas(evolveLvl)}}/1</div>
+            <div class="completedAchi" v-else>Completed</div>
+          </li>
+          <li>
+            <div>Evolver:</div>
+            <div v-if="evolveLvl < 10" :v-bind="evolveLvl">{{numberWithCommas(evolveLvl)}}/10</div>
+            <div class="completedAchi" v-else>Completed</div>
+          </li>
+          <li>
+            <div>Pokemon master:</div>
+            <div v-if="evolveLvl < 100" :v-bind="evolveLvl">{{numberWithCommas(evolveLvl)}}/100</div>
             <div class="completedAchi" v-else>Completed</div>
           </li>
         </ul>
@@ -249,8 +265,8 @@ export default {
       this.clicks = ++this.clicks
     },
     increasePoint () {
-      this.points = parseInt(this.points) + parseInt(this.pps)
-      this.totalPoints = parseInt(this.totalPoints) + parseInt(this.pps)
+      this.points = this.round((parseInt(this.points) + parseInt(this.pps)), 1)
+      this.totalPoints = this.round((parseInt(this.totalPoints) + parseInt(this.pps)), 1)
     },
     increasePointsInterval () {
       this.interval = setInterval(this.increasePoint, 1000)
@@ -294,7 +310,7 @@ export default {
             // updates user
             self.points = parseInt(self.points) - parseInt(item.price)
             if (item.type === 'auto') {
-              self.pps = parseInt(self.pps) + parseInt(item.damage)
+              self.pps = (parseInt(self.pps) + parseInt(item.damage) * (1 + (0.1 * self.evolveLvl)))
             } else if (item.type === 'click') {
               self.cpc = parseInt(self.cpc) + parseInt(item.damage)
             }
@@ -309,24 +325,34 @@ export default {
                 item.name = '8===D'
               } else if (item.level >= 100) {
                 item.name = 'Excalibur'
+                item.price = self.round(item.price * 1.37, 1)
               } else if (item.level >= 90) {
                 item.name = 'SwordInATopHat'
+                item.price = self.round(item.price * 1.35, 1)
               } else if (item.level >= 80) {
                 item.name = 'The T-Bone'
+                item.price = self.round(item.price * 1.33, 1)
               } else if (item.level >= 70) {
                 item.name = 'Burning Sword'
+                item.price = self.round(item.price * 1.31, 1)
               } else if (item.level >= 60) {
                 item.name = 'Magic Sword'
+                item.price = self.round(item.price * 1.29, 1)
               } else if (item.level >= 50) {
                 item.name = 'Massive Sword'
+                item.price = self.round(item.price * 1.27, 1)
               } else if (item.level >= 40) {
                 item.name = 'Big Sword'
+                item.price = self.round(item.price * 1.25, 1)
               } else if (item.level >= 30) {
                 item.name = 'Gold Sword'
+                item.price = self.round(item.price * 1.23, 1)
               } else if (item.level >= 20) {
                 item.name = 'Iron Sword'
+                item.price = self.round(item.price * 1.21, 1)
               } else if (item.level >= 10) {
                 item.name = 'Rusty Sword'
+                item.price = self.round(item.price * 1.19, 1)
               }
             }
           }
@@ -569,5 +595,8 @@ h3 {
 
 .evolveBuff {
   border: 1px solid var(--green);
+}
+.clicker-area {
+  cursor: pointer;
 }
 </style>
