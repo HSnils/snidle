@@ -280,11 +280,12 @@ export default {
       if (this.doublePPSactive === false) {
         this.doublePPSactive = true
         const self = this
-        self.pps = self.pps * 2
+        const tempPPS = self.pps * 2
+        self.pps = tempPPS
 
         setTimeout(
           function () {
-            self.pps = self.pps / 2
+            self.pps = self.pps - tempPPS / 2
           }
           , 30000)
 
