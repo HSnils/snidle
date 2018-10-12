@@ -25,7 +25,8 @@
           </li>
         </ul>
         <div class="shopBuffsBox">
-          <div class="buff" v-bind:class="{inUse: doublePPSactive}" title="Double your Points per second for 30sec" v-on:click="doublePPS()">x2</div>
+          <div v-if="items[3].level >= 1" class="buff" v-bind:class="{inUse: doublePPSactive}" title="Double your Points per second for 30sec, 5min cooldown" v-on:click="doublePPS()">x2</div>
+          <div class="buff evolveBuff" v-if="items[7].level >= 1" v-on:click="evolve()" title="Click to evolve">!+!</div>
         </div>
       </div>
 
@@ -43,8 +44,12 @@
           </li>
           <br>
           <li>
-            <div>Sword:</div>
-            <div :v-bind="items[0].name">{{items[0].name}}</div>
+            <div>Times evolved:</div>
+            <div :v-bind="evolveLvl">{{evolveLvl}}</div>
+          </li>
+          <li>
+            <div>Evolve bonus:</div>
+            <div :v-bind="evolveLvl">{{evolveLvl * 10}}% pps</div>
           </li>
         </ul>
         <h3 style="margin-top: 1em">Achievments</h3>
@@ -108,6 +113,7 @@ export default {
       pps: 1, /* Points per second */
       cpc: 1, /* Clicks per click */
       doublePPSactive: false,
+      evolveLvl: 0,
       items: [
         {
           id: 1,
@@ -234,6 +240,10 @@ export default {
       if (this.$cookies.isKey('cpc')) {
         this.cpc = this.$cookies.get('cpc')
       }
+
+      if (this.$cookies.isKey('evolve')) {
+        this.evolveLvl = this.$cookies.get('evolve')
+      }
     },
     increaseClick () {
       this.clicks = ++this.clicks
@@ -330,6 +340,111 @@ export default {
       this.$cookies.set('items', JSON.stringify(this.items), -1)
       this.$cookies.set('pps', this.pps, -1)
       this.$cookies.set('cpc', this.cpc, -1)
+      this.$cookies.set('evolve', this.evolveLvl, -1)
+    },
+    evolve () {
+      this.evolveLvl = ++this.evolveLvl
+      this.points = 0
+      this.cpc = 1
+      this.pps = 1
+      this.items = [
+        {
+          id: 1,
+          type: 'click',
+          name: 'Small Sword',
+          damage: 1,
+          price: 15,
+          level: 0
+        },
+        {
+          id: 2,
+          type: 'auto',
+          name: 'Peasant',
+          damage: 1,
+          price: 100,
+          level: 0
+        },
+        {
+          id: 3,
+          type: 'auto',
+          name: 'Thief',
+          damage: 4,
+          price: 500,
+          level: 0
+        },
+        {
+          id: 4,
+          type: 'auto',
+          name: 'Warrior',
+          damage: 10,
+          price: 3000,
+          level: 0
+        },
+        {
+          id: 5,
+          type: 'auto',
+          name: 'Bounty Hunter',
+          damage: 40,
+          price: 10000,
+          level: 0
+        },
+        {
+          id: 6,
+          type: 'auto',
+          name: 'Assasin',
+          damage: 100,
+          price: 40000,
+          level: 0
+        },
+        {
+          id: 7,
+          type: 'auto',
+          name: 'Wizard',
+          damage: 400,
+          price: 200000,
+          level: 0
+        },
+        {
+          id: 8,
+          type: 'auto',
+          name: 'Undead Lord',
+          damage: 6666,
+          price: 1666666,
+          level: 0
+        },
+        {
+          id: 9,
+          type: 'auto',
+          name: 'Dragon',
+          damage: 98765,
+          price: 123456789,
+          level: 0
+        },
+        {
+          id: 10,
+          type: 'auto',
+          name: 'Dragon Slayer',
+          damage: 999999,
+          price: 3999999999,
+          level: 0
+        },
+        {
+          id: 11,
+          type: 'auto',
+          name: 'Overlord',
+          damage: 10000000,
+          price: 75000000000,
+          level: 0
+        },
+        {
+          id: 12,
+          type: 'auto',
+          name: 'Taxes',
+          damage: 1000000000,
+          price: 999999999999,
+          level: 0
+        }
+      ]
     }
   },
   created () {
@@ -371,6 +486,13 @@ export default {
   bottom: 0;
   width: 20%;
   height: 100%;
+}
+
+@media only screen and (max-width: 738px) {
+  .sidebar {
+    width: 100%;
+    top: 6%;
+  }
 }
 
 .sidebarBox {
@@ -427,6 +549,8 @@ h3 {
   position: absolute;
   bottom: 10%;
   width: 100%;
+  display: flex;
+  justify-content: space-around;
 }
 .buff {
   border: 1px solid var(--gold);
@@ -441,5 +565,9 @@ h3 {
 
 .inUse {
   border: 1px solid var(--red) !important;
+}
+
+.evolveBuff {
+  border: 1px solid var(--green);
 }
 </style>
