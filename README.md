@@ -1,2 +1,2 @@
 # snidle
-http://snils.no/snidle
+Play it here: http://snils.no/snidle
